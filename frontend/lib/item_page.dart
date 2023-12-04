@@ -15,8 +15,8 @@ class ItemPage extends StatefulWidget {
 class _ItemPageState extends State<ItemPage> {
   final Logger log = Logger();
   final _formKey = GlobalKey<FormState>();
-  final client = Musicband.create(baseUrl: Uri.parse("https://localhost:8444/soa-first-0.0.1-SNAPSHOT"));
-  final grammyClient = Musicband.create(baseUrl: Uri.parse("https://localhost:6367/Grammy_war"));
+  final client = Musicband.create(baseUrl: Uri.parse("http://localhost:1453"));
+  final grammyClient = Musicband.create(baseUrl: Uri.parse("http://localhost:1457"));
   var isCreationForm = false;
   late MusicBand musicBand;
 

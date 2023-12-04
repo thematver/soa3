@@ -2,14 +2,19 @@ package xyz.anomatver.soa3;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.websocket.server.PathParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import xyz.anomatver.soa3.model.ConsulServiceResponse;
 import xyz.anomatver.soa3.model.MusicBand;
 import xyz.anomatver.soa3.model.MusicGenre;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,11 +22,45 @@ import java.util.List;
 @RequestMapping("grammy/bands")
 public class GrammyController {
 
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
+    public String serviceUrl() {
+        List<ServiceInstance> list = discoveryClient.getInstances("musicbands");
+        if (list != null && list.size() > 0 ) {
+            return list.get(0).getUri().toString();
+        }
+        return getRestUrl();
+    }
+
+    public String getRestUrl()  {
+        RestTemplate restTemplate = new RestTemplate();
+        String consulUrl = "localhost:1456";
+
+        try {
+            ResponseEntity<ConsulServiceResponse> responseEntity = restTemplate.getForEntity(
+                    consulUrl + "v1/agent/service/musicbands",
+                    ConsulServiceResponse.class
+            );
+
+            ConsulServiceResponse consulService = responseEntity.getBody();
+
+            if (consulService != null) {
+                return String.format("http://%s:%s/", consulService.getAddress(), consulService.getPort());
+            } else {
+                return "localhost:1454";
+            }
+        } catch (Exception e) {
+            return "localhost:1454";
+        }
+    }
+
+
     @GetMapping("/get-by-genre/{genre}")
     public ResponseEntity<?> getByGenre(@PathParam("genre") MusicGenre genre) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String uri = "http://localhost:8444/soa-first-0.0.1-SNAPSHOT/musicbands?filterBy=genre&filterValue="+genre;
+        String uri = serviceUrl() + "/musicbands?filterBy=genre&filterValue="+genre;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -41,7 +80,7 @@ public class GrammyController {
 
         // Fetch the band
         ResponseEntity<MusicBand> responseEntity = restTemplate.exchange(
-                "http://localhost:8444/soa-first-0.0.1-SNAPSHOT/musicbands/" + id,
+                serviceUrl() + "/musicbands/" + id,
                 HttpMethod.GET,
                 null,
                 MusicBand.class
@@ -63,7 +102,7 @@ public class GrammyController {
 
         // Send a PUT request to update the band
         ResponseEntity<String> updateResponse = restTemplate.exchange(
-                "https://localhost:8444/soa-first-0.0.1-SNAPSHOT/musicbands/" + id,
+                serviceUrl() + "/musicbands/" + id,
                 HttpMethod.PUT,
                 requestEntity,
                 String.class
