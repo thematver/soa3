@@ -1,0 +1,13 @@
+spring:
+    application:
+        name: gateway
+server:
+    port: 8600
+zuul:
+    routes:
+        musicbands:
+            path: /musicbands/**
+            serviceId: musicbands
+        grammy:
+            path: /grammy/**
+            serviceId: grammy
