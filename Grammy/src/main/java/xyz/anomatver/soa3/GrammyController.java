@@ -56,6 +56,7 @@ public class GrammyController {
     }
 
 
+
     @GetMapping("/get-by-genre/{genre}")
     public ResponseEntity<?> getByGenre(@PathParam("genre") MusicGenre genre) {
         RestTemplate restTemplate = new RestTemplate();
