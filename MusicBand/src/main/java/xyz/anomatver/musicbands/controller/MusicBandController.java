@@ -153,12 +153,13 @@ public class MusicBandController {
             page = Integer.parseInt(httpServletRequest.getParameter("page"));
         }
         if (httpServletRequest.getParameter("limit") == null) {
-            limit = 2;
+            limit = 10;
         }
         else {
             limit = Integer.parseInt(httpServletRequest.getParameter("limit"));
         }
         List<MusicBand> musicBandList = musicBandService.findAll(httpServletRequest, page, limit);
+
         List<MusicBandResponseDTO> musicBandResponseDTOList = new ArrayList<>();
         //MusicBandPageableResponseDTO musicBandPageableResponseDTO = new MusicBandPageableResponseDTO();
         toDTOList(musicBandList, musicBandResponseDTOList);
@@ -227,22 +228,7 @@ public class MusicBandController {
         MusicBandResponseDTO musicBandResponseDTO;
         for (MusicBand musicBand: musicBandList) {
             musicBandResponseDTO = new MusicBandResponseDTO();
-            musicBandResponseDTO.setId(musicBand.getId());
-            musicBandResponseDTO.setName(musicBand.getName());
-
-            MusicBandResponseDTO.CoordinatesResponsesDTO coordinatesResponsesDTO = new MusicBandResponseDTO.CoordinatesResponsesDTO();
-            coordinatesResponsesDTO.setX(musicBand.getCoordinates().getX());
-            coordinatesResponsesDTO.setY(musicBand.getCoordinates().getY());
-            musicBandResponseDTO.setCoordinates(coordinatesResponsesDTO);
-
-            musicBandResponseDTO.setCreationDate(musicBand.getCreationDate());
-            musicBandResponseDTO.setNumberOfParticipants(musicBand.getNumberOfParticipants());
-            musicBandResponseDTO.setGenre(musicBand.getGenre());
-            musicBandResponseDTO.setIsNominatedToGrammy(musicBand.getIsNominatedToGrammy());
-
-            MusicBandResponseDTO.StudioResponseDTO studioResponseDTO = new MusicBandResponseDTO.StudioResponseDTO();
-            studioResponseDTO.setName(musicBand.getStudio().getName());
-            musicBandResponseDTO.setStudio(studioResponseDTO);
+            toDTO(musicBand, musicBandResponseDTO);
             musicBandResponseDTOList.add(musicBandResponseDTO);
         }
     }
