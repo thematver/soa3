@@ -145,6 +145,7 @@ public class MusicBandController {
     @GetMapping
     public ResponseEntity<?> findAllMusicBandByPage(HttpServletRequest httpServletRequest) {
         Integer page;
+        System.out.println("GOVNO");
         Integer limit;
         if (httpServletRequest.getParameter("page") == null) {
             page = 1;
@@ -188,7 +189,7 @@ public class MusicBandController {
         musicBand.setCoordinates(coordinates);
 
         musicBand.setNumberOfParticipants(musicBandRequestDTO.getNumberOfParticipants());
-        musicBand.setGenre(musicBandRequestDTO.getMusicGenre());
+        musicBand.setGenre(musicBandRequestDTO.getGenre());
 
         Studio studio = new Studio();
         if (musicBandRequestDTO.getStudio().getName() != null) {

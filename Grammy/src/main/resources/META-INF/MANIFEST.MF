@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: xyz.anomatver.soa3.GrammyApplication
-
