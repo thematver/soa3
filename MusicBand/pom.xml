@@ -8,12 +8,12 @@
         <version>2.6.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>soa-first</artifactId>
+    <groupId>xyz.anomatver</groupId>
+    <artifactId>musicbands</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>soa-first</name>
-    <description>soa-first</description>
+    <name>musicbands</name>
+    <description>musicbands</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -64,16 +64,6 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>1.5.3.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-all</artifactId>
-            <version>3.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-config</artifactId>
-            <version>3.1.1</version>
         </dependency>
 
         <dependency>

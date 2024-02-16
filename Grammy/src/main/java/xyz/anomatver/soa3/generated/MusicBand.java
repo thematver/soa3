@@ -44,7 +44,8 @@ import jakarta.xml.bind.annotation.XmlType;
     "coordinates",
     "numberOfParticipants",
     "studio",
-    "nominatedToGrammy"
+    "nominatedToGrammy",
+        "genre"
 })
 public class MusicBand {
 
@@ -58,6 +59,8 @@ public class MusicBand {
     protected Studio studio;
     protected boolean nominatedToGrammy;
 
+    @XmlElement(required = true)
+    protected String genre;
     /**
      * Gets the value of the id property.
      * 
@@ -73,6 +76,9 @@ public class MusicBand {
     public void setId(long value) {
         this.id = value;
     }
+
+    public void setGenre(String genre) { this.genre = genre; }
+    public String getGenre() { return genre; }
 
     /**
      * Gets the value of the name property.

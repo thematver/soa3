@@ -1,9 +1,0 @@
-spring:
-  cloud:
-    consul:
-      host: localhost
-      port: 1456
-      discovery:
-        enabled: true
-    config:
-      enabled: true

@@ -12,6 +12,7 @@ import xyz.anomatver.soa3.generated.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Endpoint()
 public class SoapEndpoint {
@@ -38,12 +39,12 @@ public class SoapEndpoint {
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
         ResponseEntity<List<MusicBand>> responseEntity =
                 restTemplate.exchange(uri, HttpMethod.GET, entity, new ParameterizedTypeReference<>() {});
-
-        List<MusicBand> bandList = responseEntity.getBody();
-
-        if (bandList != null) {
-            response.getMusicBand().addAll(bandList);
+        for (MusicBand i: responseEntity.getBody()) {
+            System.out.println(i.getGenre());
+            System.out.println(i.isNominatedToGrammy());
         }
+        List<MusicBand> bandList = responseEntity.getBody().stream().filter(x -> x.isNominatedToGrammy() && Objects.equals(x.getGenre(), request.getGenre())).toList();
+        response.getMusicBand().addAll(bandList);
 
         return response;
     }
@@ -56,20 +57,18 @@ public class SoapEndpoint {
         RestTemplate restTemplate = new RestTemplate();
 
         // Fetch the band from the REST service
-        String getUri = serviceUrl() + "/musicbands/" + request.getId();
+        String getUri = serviceUrl() + "/" + request.getId();
         ResponseEntity<MusicBand> bandResponse = restTemplate.getForEntity(getUri, MusicBand.class);
 
         if (bandResponse.getStatusCode() == HttpStatus.OK && bandResponse.getBody() != null) {
             MusicBand band = bandResponse.getBody();
-            // Update the field for nomination
             band.setNominatedToGrammy(true);
 
-            // Now, send the updated band back to the REST service to update the nomination status
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<MusicBand> requestEntity = new HttpEntity<>(band, headers);
 
-            String putUri = serviceUrl() + "/musicbands/" + request.getId();
+            String putUri = serviceUrl() + "/" + request.getId();
             ResponseEntity<String> updateResponse = restTemplate.exchange(
                     putUri, HttpMethod.PUT, requestEntity, String.class);
 
